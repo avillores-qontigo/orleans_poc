@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orleans-service
+  labels:
+    orleans/serviceId: url-shortener-app
+spec:
+  type: LoadBalancer
+  selector:
+    orleans/serviceId: url-shortener-app
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
