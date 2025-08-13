@@ -4,6 +4,6 @@
     {
         Task SetUrl(string longUrl);
 
-        Task<string> GetUrl();
+        Task<string?> GetUrl();
     }
 }

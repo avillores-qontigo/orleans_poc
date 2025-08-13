@@ -28,7 +28,7 @@ namespace OrleansURLShortener.Controllers
                 """);
             }
 
-            var grainId = Guid.NewGuid().GetHashCode().ToString("X"); 
+            var grainId = "i2_dev_orleans_poc"; 
 
             // Create and persist a grain with the shortened ID and full URL
             var shortenerGrain = grainFactory.GetGrain<IUrlShortenerGrain>(grainId);
@@ -40,8 +40,9 @@ namespace OrleansURLShortener.Controllers
             {
                 Path = $"/go/{grainId}"
             };
+            var pod = Environment.GetEnvironmentVariable("POD_NAME");
 
-            return Ok(resultBuilder.Uri);
+            return Ok($"{resultBuilder.Uri} was stored at {pod}");
         }
 
         [HttpGet("/go/{shortUrl}")]
@@ -54,6 +55,24 @@ namespace OrleansURLShortener.Controllers
             var redirectBuilder = new UriBuilder(url);
 
             return Redirect(redirectBuilder.Uri.ToString());
+        }
+
+        [HttpGet("/state")]
+        public async Task<ActionResult<string>> State(IGrainFactory grainFactory)
+        {
+            var shortenerGrain = grainFactory.GetGrain<IUrlShortenerGrain>("i2_dev_orleans_poc");
+
+            var url = await shortenerGrain.GetUrl();
+            var pod = Environment.GetEnvironmentVariable("POD_NAME");
+
+            if (string.IsNullOrEmpty(url)) 
+            {
+            return Ok($"No data was stored at {pod}");
+            }
+
+            var redirectBuilder = new UriBuilder(url);
+
+            return Ok($"{redirectBuilder.Uri.ToString()} was stored at {pod}");
         }
     }
 }

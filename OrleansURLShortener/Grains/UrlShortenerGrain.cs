@@ -9,7 +9,7 @@ namespace OrleansURLShortener.Grains
         {
             _state = state;
         }
-        public async Task<string> GetUrl()
+        public async Task<string?> GetUrl()
         {
             await _state.ReadStateAsync();
             return _state.State.FullUrl;

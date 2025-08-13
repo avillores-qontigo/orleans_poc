@@ -9,18 +9,20 @@ namespace OrleansURLShortener
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Build configuration
+            builder.Configuration.AddEnvironmentVariables();
+
             // Configure Silos
             builder.Host.UseOrleans(siloBuilder =>
             {
                 siloBuilder.UseLocalhostClustering();
-                siloBuilder.AddMemoryGrainStorage("urls");
                 siloBuilder.UseKubernetesHosting();
+                siloBuilder.AddMemoryGrainStorage("urls");
             });
 
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

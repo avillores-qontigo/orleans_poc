@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: orleans
-          image: orleans_poc:latest
+          image: orleans_poc:memory
           imagePullPolicy: "Never"
           ports:
           # Define the ports Orleans uses
