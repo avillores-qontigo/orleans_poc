@@ -5,23 +5,22 @@ namespace OrleansURLShortener.Grains
     {
         IPersistentState<UrlDetails> _state;
 
-        public UrlShortenerGrain([PersistentState(stateName: "url", storageName: "urls")] IPersistentState<UrlDetails> state)
+        public UrlShortenerGrain([PersistentState(stateName: "url", storageName: "cosmosStore")] IPersistentState<UrlDetails> state)
         {
             _state = state;
         }
         public async Task<string?> GetUrl()
         {
-            await _state.ReadStateAsync();
             return _state.State.FullUrl;
         }
 
         public async Task SetUrl(string longUrl)
         {
-            _state.State = new() { 
-                FullUrl = longUrl,
-                ShortenedRouteSegment = this.GetPrimaryKeyString()
-            };
-
+            var grainId = this.GetPrimaryKeyString();
+            _state.State.FullUrl = longUrl;
+            _state.State.ShortenedRouteSegment = grainId;
+            _state.State.PartitionKey = grainId;
+            
             await _state.WriteStateAsync();
         }
     }
@@ -30,9 +29,12 @@ namespace OrleansURLShortener.Grains
     public record UrlDetails
     {
         [Id(0)]
-        public string FullUrl { get; set; } = "";
+        public string PartitionKey { get; set; } = "";
 
         [Id(1)]
+        public string FullUrl { get; set; } = "";
+
+        [Id(2)]
         public string ShortenedRouteSegment { get; set; } = "";
     }
 }

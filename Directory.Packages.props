@@ -7,5 +7,6 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageVersion Include="Microsoft.Orleans.Server" Version="8.2.0" />
     <PackageVersion Include="Microsoft.Orleans.Hosting.Kubernetes" Version="9.2.1" />
+    <PackageVersion Include="Microsoft.Orleans.Persistence.Cosmos" Version="9.2.1" />
   </ItemGroup>
 </Project>

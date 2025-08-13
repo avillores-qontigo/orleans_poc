@@ -17,7 +17,16 @@ namespace OrleansURLShortener
             {
                 siloBuilder.UseLocalhostClustering();
                 siloBuilder.UseKubernetesHosting();
-                siloBuilder.AddMemoryGrainStorage("urls");
+                siloBuilder.AddCosmosGrainStorage(
+                    name: "cosmosStore",
+                    configureOptions: static options =>
+                    {
+                        options.IsResourceCreationEnabled = true;
+                        options.DatabaseName = "state";
+                        options.ContainerName = "urls";
+                        options.PartitionKeyPath = "/PartitionKey";
+                        options.ConfigureCosmosClient("<azure-cosmos-db-nosql-connection-string>");
+                    });
             });
 
             // Add services to the container.
